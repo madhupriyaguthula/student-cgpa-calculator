@@ -1,69 +1,194 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student CGPA Calculator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
-    .container { max-width: 500px; margin: 40px auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px #0001; }
-    h1 { text-align: center; color: #392a69; }
-    label { display: block; margin-top: 1rem; color: #222; }
-    input[type=number] { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
-    button { margin: 2rem 0 0 0; width: 100%; padding: 12px; background: #392a69; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-    button:hover { background: #5945a0; }
-    .result { margin-top: 1.5rem; font-size: 1.2rem; text-align: center; color: green; }
-    .footer { text-align: center; margin-top: 2rem; color: #999; font-size: 0.9rem; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Student Percentage & CGPA Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: #fff;
+            max-width: 430px;
+            margin: 40px auto 0 auto;
+            border-radius: 16px;
+            padding: 32px 28px 24px 28px;
+            box-shadow: 0 8px 32px rgba(28, 80, 158, 0.12), 0 1.5px 5px #dbeafe;
+        }
+        h2 {
+            color: #2563eb;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .welcome-box {
+            text-align: center;
+            padding: 32px 0;
+        }
+        .welcome-btn {
+            margin-top: 24px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .welcome-btn:hover {
+            background: #1e40af;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 14px;
+            font-weight: 500;
+            color: #334155;
+        }
+        input[type="number"] {
+            width: 90px;
+            padding: 7px;
+            margin-top: 4px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #a5b4fc;
+            background: #f1f5f9;
+        }
+        button[type="submit"] {
+            margin-top: 28px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #1e40af;
+        }
+        .result {
+            margin-top: 30px;
+            background: #dbeafe;
+            color: #1e293b;
+            border-radius: 8px;
+            padding: 18px;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 12px rgba(28, 80, 158, 0.07);
+            transition: box-shadow 0.2s;
+        }
+        .error {
+            color: #dc2626;
+            margin-top: 20px;
+            text-align: center;
+            background: #ffe4e6;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        @media (max-width: 500px) {
+            .container { 
+                padding: 16px 6vw 16px 6vw; 
+                max-width: 98vw;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Student CGPA Calculator</h1>
-    <form id="cgpaForm">
-      <label for="semesters">Number of Semesters:</label>
-      <input type="number" id="semesters" min="1" max="12" required>
-      <div id="gradesInputs"></div>
-      <button type="submit">Calculate CGPA</button>
-    </form>
-    <div id="result" class="result"></div>
-  </div>
-  <div class="footer">
-    &copy; 2025 madhupriyaguthula | Powered by GitHub Pages
-  </div>
-  <script>
-    const semestersInput = document.getElementById('semesters');
-    const gradesInputsDiv = document.getElementById('gradesInputs');
-    const form = document.getElementById('cgpaForm');
-    const resultDiv = document.getElementById('result');
+    <div class="container">
+        <!-- Welcome message and button -->
+        <div id="welcomeSection" class="welcome-box">
+            <h2>Welcome!</h2>
+            <p>Are you ready to calculate your score?</p>
+            <button class="welcome-btn" onclick="showCalculator()">Click Here</button>
+        </div>
 
-    semestersInput.addEventListener('input', function() {
-      const n = parseInt(this.value) || 0;
-      gradesInputsDiv.innerHTML = '';
-      for (let i = 1; i <= n; i++) {
-        gradesInputsDiv.innerHTML += `
-          <label for="grade${i}">Semester ${i} GPA:</label>
-          <input type="number" id="grade${i}" name="grade${i}" min="0" max="10" step="0.01" required>
-        `;
-      }
-    });
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const n = parseInt(semestersInput.value) || 0;
-      let sum = 0;
-      for (let i = 1; i <= n; i++) {
-        const grade = parseFloat(document.getElementById('grade' + i).value);
-        if (isNaN(grade) || grade < 0 || grade > 10) {
-          resultDiv.textContent = 'Please enter valid grades for all semesters.';
-          resultDiv.style.color = 'red';
-          return;
+        <!-- Calculator form (hidden by default) -->
+        <form id="marksForm" style="display:none;" onsubmit="calculateResults(event)">
+            <h2 style="margin-bottom:10px;">Student Percentage & CGPA Calculator</h2>
+            <label>Subject 1 Marks: <input type="number" min="0" max="100" id="m1"></label>
+            <label>Subject 2 Marks: <input type="number" min="0" max="100" id="m2"></label>
+            <label>Subject 3 Marks: <input type="number" min="0" max="100" id="m3"></label>
+            <label>Subject 4 Marks: <input type="number" min="0" max="100" id="m4"></label>
+            <label>Subject 5 Marks: <input type="number" min="0" max="100" id="m5"></label>
+            <label>Subject 6 Marks: <input type="number" min="0" max="100" id="m6"></label>
+            <label>Subject 7 Marks: <input type="number" min="0" max="100" id="m7"></label>
+            <label>Subject 8 Marks: <input type="number" min="0" max="100" id="m8"></label>
+            <label>Subject 9 Marks: <input type="number" min="0" max="100" id="m9"></label>
+            <label>Subject 10 Marks: <input type="number" min="0" max="100" id="m10"></label>
+            <button type="submit">Calculate</button>
+        </form>
+        <div class="result" id="results" style="display:none;"></div>
+        <div class="error" id="errorMsg" style="display:none;"></div>
+    </div>
+    <script>
+        function showCalculator() {
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('marksForm').style.display = '';
         }
-        sum += grade;
-      }
-      const cgpa = (sum / n).toFixed(2);
-      resultDiv.textContent = 'Your CGPA is: ' + cgpa;
-      resultDiv.style.color = 'green';
-    });
-  </script>
+
+        function calculateResults(event) {
+            event.preventDefault();
+            let marks = [];
+            let totalSubjects = 0;
+            let totalMarks = 0;
+
+            for (let i = 1; i <= 10; i++) {
+                let value = document.getElementById('m' + i).value;
+                if (value !== "") {
+                    let mark = Number(value);
+                    if (mark < 0 || mark > 100) {
+                        showError(`Enter valid marks between 0 and 100 for Subject ${i}.`);
+                        return;
+                    }
+                    marks.push(mark);
+                    totalMarks += mark;
+                    totalSubjects += 1;
+                }
+            }
+
+            if (totalSubjects === 0) {
+                showError("Please enter at least one subject mark to calculate.");
+                return;
+            }
+
+            hideError();
+
+            let percentage = (totalMarks / (totalSubjects * 100)) * 100;
+            let cgpa = (percentage / 9.5).toFixed(2);
+            let percentageFromCgpa = (cgpa * 9.5).toFixed(2);
+
+            // Show popup
+            alert(`Congratulations! Here is your total score ${totalMarks}.\nYou did an amazing job! Keep going`);
+
+            document.getElementById('results').style.display = '';
+            document.getElementById('results').innerHTML = `
+                <strong>Total Marks:</strong> ${totalMarks} / ${totalSubjects * 100} <br>
+                <strong>Percentage:</strong> ${percentage.toFixed(2)}% <br>
+                <strong>CGPA:</strong> ${cgpa} <br>
+                <strong>Percentage from CGPA:</strong> ${percentageFromCgpa}%
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('errorMsg').style.display = '';
+            document.getElementById('errorMsg').textContent = message;
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
