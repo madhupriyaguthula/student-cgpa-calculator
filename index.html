@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student CGPA Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
+    .container { max-width: 500px; margin: 40px auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px #0001; }
+    h1 { text-align: center; color: #392a69; }
+    label { display: block; margin-top: 1rem; color: #222; }
+    input[type=number] { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
+    button { margin: 2rem 0 0 0; width: 100%; padding: 12px; background: #392a69; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #5945a0; }
+    .result { margin-top: 1.5rem; font-size: 1.2rem; text-align: center; color: green; }
+    .footer { text-align: center; margin-top: 2rem; color: #999; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Student CGPA Calculator</h1>
+    <form id="cgpaForm">
+      <label for="semesters">Number of Semesters:</label>
+      <input type="number" id="semesters" min="1" max="12" required>
+      <div id="gradesInputs"></div>
+      <button type="submit">Calculate CGPA</button>
+    </form>
+    <div id="result" class="result"></div>
+  </div>
+  <div class="footer">
+    &copy; 2025 madhupriyaguthula | Powered by GitHub Pages
+  </div>
+  <script>
+    const semestersInput = document.getElementById('semesters');
+    const gradesInputsDiv = document.getElementById('gradesInputs');
+    const form = document.getElementById('cgpaForm');
+    const resultDiv = document.getElementById('result');
+
+    semestersInput.addEventListener('input', function() {
+      const n = parseInt(this.value) || 0;
+      gradesInputsDiv.innerHTML = '';
+      for (let i = 1; i <= n; i++) {
+        gradesInputsDiv.innerHTML += `
+          <label for="grade${i}">Semester ${i} GPA:</label>
+          <input type="number" id="grade${i}" name="grade${i}" min="0" max="10" step="0.01" required>
+        `;
+      }
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const n = parseInt(semestersInput.value) || 0;
+      let sum = 0;
+      for (let i = 1; i <= n; i++) {
+        const grade = parseFloat(document.getElementById('grade' + i).value);
+        if (isNaN(grade) || grade < 0 || grade > 10) {
+          resultDiv.textContent = 'Please enter valid grades for all semesters.';
+          resultDiv.style.color = 'red';
+          return;
+        }
+        sum += grade;
+      }
+      const cgpa = (sum / n).toFixed(2);
+      resultDiv.textContent = 'Your CGPA is: ' + cgpa;
+      resultDiv.style.color = 'green';
+    });
+  </script>
+</body>
+</html>
